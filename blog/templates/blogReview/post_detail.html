@@ -1,0 +1,43 @@
+{% extends "blogReview/header.html" %} {% block content %}
+
+<br/>
+<br/>
+<br/>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 card mb-4  mt-3 left  top">
+      <div class="card-body">
+        <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+        <p class=" text-muted">{{ post.author }} | {{ post.created }}</p>
+        <p class="card-text ">{{ object.body | safe }}</p>
+      </div>
+      <hr>
+{% for comment in post.comments.all %}
+    <div class="comment">
+        <div class="date">{{ comment.created_date }}</div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+{% empty %}
+    <p>No comments here yet :(</p>
+{% endfor %}
+    </div>
+
+    {% block sidebar %} {% include 'blogReview/sidebar.html' %} {% endblock sidebar %}
+  </div>
+<!--     <a href="{% url 'add_comment' %}">Add comment</a>-->
+</div>
+
+<form method="get" action="add_comment">
+    <div class="form-group">
+        {% csrf_token %}
+        <input type="text" name="b_id" placeholder="username" value="{{ item.title }}" hidden="hidden">
+        <p>Username:</p>
+        <input type="text" name="username" class="form-control">
+        <p>Comment:</p>
+        <textarea class="form-control" mb="5" rows="3" name="comment"></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Post</button>
+</form>
+
+{% endblock content %}
